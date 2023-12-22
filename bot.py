@@ -6,7 +6,7 @@ import asyncio
 import json
 from datetime import datetime, timedelta
 
-TOKEN = "MTE4MjM3NDY1MzE3NjU5NDU5NQ.GKaNyf.S_ag4GsMbCGrKqNGmc2E8C3D6BL06Ng0_SdXOk"
+TOKEN = "YOUR TOKEN"
 
 # Définissez les intentions appropriées
 intents = discord.Intents.default()
