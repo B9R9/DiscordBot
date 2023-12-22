@@ -1,5 +1,7 @@
 #Config_File
 config.json
+requirements.txt
+pyvenv.cfg
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -12,6 +14,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 build/
+bin/
 develop-eggs/
 dist/
 downloads/
@@ -20,6 +23,7 @@ eggs/
 lib/
 lib64/
 parts/
+ressources/
 sdist/
 var/
 wheels/
