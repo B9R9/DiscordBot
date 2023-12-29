@@ -10,7 +10,7 @@ import http.client,urllib.parse
 from requests.auth import HTTPBasicAuth
 from requests_oauthlib import OAuth2Session
 
-TOKEN = "MTE4MjM3NDY1MzE3NjU5NDU5NQ.GKaNyf.S_ag4GsMbCGrKqNGmc2E8C3D6BL06Ng0_SdXOk"
+TOKEN = "..."
 
 # Définissez les intentions appropriées
 intents = discord.Intents.default()
@@ -103,8 +103,8 @@ async def ping(ctx):
 async def who_is_on_campus(ctx):
     # Configuration de l'API 42
     API_BASE_URL = 'https://api.intra.42.fr'
-    UID = 'u-s4t2ud-7f180e4d5901b1f75047caac1a1119057519a9a3e0dc60b0204abed85b33840d'
-    SECRET = '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'
+    UID = '...'
+    SECRET = '...'
     YOUR_CAMPUS_ID = '29'
 
 
