@@ -1,6 +1,5 @@
 #Config_File
-config.json
-requirements.txt
+.config.json
 pyvenv.cfg
 
 # Byte-compiled / optimized / DLL files
