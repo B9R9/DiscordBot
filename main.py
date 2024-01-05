@@ -1,20 +1,23 @@
-# Organiser le code en packages
-# Creer des tests unitaires
-
 import discord 
 from discord.ext import commands, tasks
-from discord import Embed
 import aiohttp
 import requests
 import asyncio
-import json
-from datetime import datetime, timedelta
-import http.client,urllib.parse
 from requests.auth import HTTPBasicAuth
 from requests_oauthlib import OAuth2Session
 
+from utils.utils_api import load_api_config
+from modules.news_feed import news_update_channel
+import modules.bot_manager as bot_manager
+from modules.ft_api_manager import test42
+from modules.intra import ic
+
 #Creer une fonction qui va chercher les clés d'API dans le fichier config.json/ config.yml
-TOKEN = YOUR_TOKEN
+discord_api = load_api_config('config/config.yml', 'DISCORD')
+if discord_api:
+    TOKEN = discord_api.get('key')
+else:
+    print("Configuration for Discord not found or an error occurred while loading the configuration.")
 
 # Définissez les intentions appropriées
 intents = discord.Intents.default()
@@ -35,154 +38,44 @@ async def on_ready():
             print(f'  Channel: {channel.name} (ID: {channel.id}, Type: {channel.type})')
     
     print('----------------------------------')
-    #new_update_channel.start()
-
-async def get_api_keys(api_name):
-    with open('.config.json') as config_file:
-        config_data = json.load(config_file)
-
-    for api_info in config_data:
-        if api_info['name'] == api_name:
-            return api_info
-    print(f"API '{api_name}' not found in the config file.")
-    return None
-
-# Creer un package pour les taches planifiées
-# # Tâche planifiée pour envoyer des mises à jour de nouvelles
-# @tasks.loop(minutes=30)
-# async def new_update_channel():
-#     api_name = "MEDIASTACKS_API"
-#     try:
-#         api = await get_api_keys(api_name)
-#         if api is None:
-#             print(f"API '{api_name}' not found in the config file.")
-#             return
-#         keywords = ['IA', 'Technologie']
-#         # Période n'excédant pas trois mois
-#         end_date = datetime.now()
-#         start_date = end_date - timedelta(days=90)
-#         if api:
-#             channel_id = api['channel_id']
-#             conn = http.client.HTTPConnection('api.mediastack.com')
-#             params = urllib.parse.urlencode ({
-#             'access_key': f"{api['key']}",
-#             'categories': 'technology, science',
-#             'languages': 'en',
-#             'sort': 'published_desc',
-#             'limit': "5"     
-#             })
-#             conn.request('GET', '/v1/news?{}'.format(params))
-#             res = conn.getresponse()
-#             if res.status == 200:
-#                 data = res.read()
-#                 # Convertir les données JSON en un objet Python
-#                 json_data = json.loads(data)
-#                 channel_id = api['channel_id']
-#                 channel = bot.get_channel(int(channel_id))
-#                 for info in json_data['data']:
-#                     embed = Embed(
-#                         title = info['title'],
-#                         description = info['description'],
-#                         url = info['url'],
-#                         colour = discord.Colour.blue()
-#                     )
-#                     embed.set_author(name=info["author"])
-#                     embed.set_image(url=info["image"])
-#                     embed.set_footer(text=f"Source: {info['source']} | Published at: {info['published_at']}")
-#                     await channel.send(embed=embed)
-#                 print(data.decode('utf-8'))
-#             else:
-#                 print(f"La requête a échoué avec le code de statut : {res.status}")
-#             conn.close()
-#     except ValueError as e:
-#         print(f"Erreur : {e}")
-    
-@bot.command(help='Responds with hello!')
-async def hello(ctx):
-    await ctx.send('Hello!')
-
-@bot.command(help='Responds with pong!')
-async def ping(ctx):
-    await ctx.send('pong')
-
-@bot.command(name='whoisoncampus', help='Get a list of users present on the campus')
-async def who_is_on_campus(ctx):
-    # Configuration de l'API 42
-    API_BASE_URL = 'https://api.intra.42.fr'
-    UID = '...'
-    SECRET = '...'
-    YOUR_CAMPUS_ID = '09'
+    # new_update_channel.start()
 
 
-    client = OAuth2Session(client_id=UID, client_secret=SECRET, token_endpoint_auth_method='client_secret_post')
-    token_url = f'{API_BASE_URL}/oauth/token'
-    # auth = HTTPBasicAuth(UID, SECRET)
+@bot.command(name='test42', help='NONE')
+async def test42_command(ctx):
+    """Test the 42 API."""
+    # Filter by campus in specified range of updated_at
+    payload = {
+        "filter[campus_id]": 13,
+        "range[updated_at]":"2019-01-01T00:00:00.000Z,2020-01-01T00:00:00.000Z"
+    }
 
-    # Configuration pour le flux client credentials
-    # token = client.fetch_token(token_url=token_url, auth=auth)
-    # ACCESS_TOKEN = token['access_token']
-
-    # Utiliser le jeton pour faire une requête à l'API
-    response = client.get(f'{API_BASE_URL}/v2/users/briffard')
-    if response.status_code == 200:
+    # GET campus_users of specified campus in range
+    response = ic.get("campus_users", params=payload)
+    if response.status_code == 200: 
         data = response.json()
-        print(data)
-    else:
-        print(f'Error: {response.status_code}')
-    # # Utilisez le jeton pour faire des requêtes à l'API
-    # response = client.get(f'{API_BASE_URL}/v2/campus')
-    # if response.status_code == 200:
-    #     data = response.json()
-    #     print(data)
-    # else:
-    #     print(f'Error: {response.status_code}')
 
-    # # Appel de l'API 42 pour obtenir la liste des utilisateurs présents sur le campus
-    # headers = {'Authorization': f'Bearer {API_TOKEN}'}
-    # response = requests.get(f'{API_BASE_URL}/v2/campus/{YOUR_CAMPUS_ID}/locations', headers=headers)
+    for user in data:
+        print(user)
 
-    # if response.status_code == 200:
-    #     data = response.json()
-    #     users_on_campus = [user['user']['login'] for user in data]
-    #     await ctx.send(f'Users on campus: {", ".join(users_on_campus)}')
-    # else:
-    #     await ctx.send('Error fetching data from 42 API')
+@bot.event
+async def on_command_error(ctx, error):
+    await bot_manager.on_command_error(ctx, error)
+
 
 @bot.command(name='end', hidden=True)
-async def shutdown(ctx):
-    """Shutdown the bot.
+async def shutdown_command(ctx):
+    """Shutdown the bot using the imported shutdown function."""
+    await bot_manager.shutdown(ctx, bot)
 
-    This function sends a 'Shutting down...' message to the Discord channel
-    from which the command was invoked and then closes the bot.
+@bot.command(name='hello', help='Responds with hello!')
+async def hello_command(ctx):
+    """Respond to the hello command."""
+    await bot_manager.hello(ctx)
 
-    Args:
-        ctx (commands.Context): The context object representing the invocation.
-
-    Returns:
-        None
-    """
-    # Sending a message to indicate that the bot is shutting down
-    await ctx.send("Shutting down...")
-
-    # Stopping any ongoing processes, if needed (commented out in this example)
-    # new_update_channel.stop()
-
-    # Closing the bot
-    await bot.close()
+@bot.command(name='ping', help='Responds with pong!')
+async def ping_command(ctx):
+    """Respond to the ping command."""
+    await bot_manager.ping(ctx)
 
 bot.run(TOKEN)
-
-
-
-            # url = f"{api['url']}?api-key={api['key']}&q={' OR '.join(keywords)}&begin_date={start_date.strftime('%Y%m%d')}&end_date={end_date.strftime('%Y%m%d')}"
-            #url = f"{api['url']}?fq=Technology&fq={filter}&api-key={api['key']}"
-            # async with aiohttp.ClientSession() as session:
-            #     async with session.get(url) as response:
-            #         if response.status == 200:
-            #             data = await response.json()
-            #             for article in data.get('response', {}).get('docs', []):
-            #                 title = article.get('abstract', '')
-            #                 url = article.get('web_url', '')
-            #                 await bot.get_channel(int(channel_id)).send(f"Titre: {title}\nURL: {url}\n")
-            #         else:
-            #             print(f"Erreur lors de la requête à l'API. Code de statut : {response.status}")

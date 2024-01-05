@@ -1,3 +1,6 @@
 #config sample file
 #---
-  discord_token: YOUR_DISCORD_TOKEN 
+apis:
+  - name: YOUR_API_NAME
+    endpoint: YOUR_API_URL
+    key: YOUR_API_TOKEN

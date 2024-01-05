@@ -1,0 +1,31 @@
+[
+    {
+        "name": "API NAME",
+        "description": "API DESCRIPTION",
+        "key":  "API KEYS",
+        "url": "API URL",
+        "channel_id": "CHANNEL"    
+    },
+    {
+        "name": "NYT_API",
+        "description": "Looks for actuality in the New York Times",
+        "key":  "4FIsHK0gAekwz5OdS0e9GYdgykrAlMy9",
+        "url": "https://api.nytimes.com/svc/search/v2/articlesearch.json",
+        "channel_id": "1187795928896245861",
+        "secret": "GMKg3fQFNZeyIitN"
+    },
+    {
+        "name": "_API",
+        "description": "MediaStacks API",
+        "key":  "dc32e386a4b4fc42a02d0195a881e253",
+        "url": "http://api.mediastack.com/v1/",
+        "channel_id": "1187795928896245861"
+    },
+    {
+        "name": "42_API",
+        "description": "42 API",
+        "key":  "",
+        "url": "",
+        "channel_id": ""
+    }
+]
