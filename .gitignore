@@ -2,6 +2,7 @@
 config.json
 pyvenv.cfg
 config/config.json
+config/config.42.yml
 config/config.yml
 
 # Byte-compiled / optimized / DLL files
