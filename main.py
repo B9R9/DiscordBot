@@ -1,3 +1,6 @@
+# Organiser le code en packages
+# Creer des tests unitaires
+
 import discord 
 from discord.ext import commands, tasks
 from discord import Embed
@@ -10,7 +13,8 @@ import http.client,urllib.parse
 from requests.auth import HTTPBasicAuth
 from requests_oauthlib import OAuth2Session
 
-TOKEN = "..."
+#Creer une fonction qui va chercher les clés d'API dans le fichier config.json/ config.yml
+TOKEN = YOUR_TOKEN
 
 # Définissez les intentions appropriées
 intents = discord.Intents.default()
@@ -43,6 +47,8 @@ async def get_api_keys(api_name):
     print(f"API '{api_name}' not found in the config file.")
     return None
 
+# Creer un package pour les taches planifiées
+# # Tâche planifiée pour envoyer des mises à jour de nouvelles
 # @tasks.loop(minutes=30)
 # async def new_update_channel():
 #     api_name = "MEDIASTACKS_API"
@@ -105,7 +111,7 @@ async def who_is_on_campus(ctx):
     API_BASE_URL = 'https://api.intra.42.fr'
     UID = '...'
     SECRET = '...'
-    YOUR_CAMPUS_ID = '29'
+    YOUR_CAMPUS_ID = '09'
 
 
     client = OAuth2Session(client_id=UID, client_secret=SECRET, token_endpoint_auth_method='client_secret_post')
@@ -117,7 +123,7 @@ async def who_is_on_campus(ctx):
     # ACCESS_TOKEN = token['access_token']
 
     # Utiliser le jeton pour faire une requête à l'API
-    response = client.get(f'{API_BASE_URL}/v2/cursus')
+    response = client.get(f'{API_BASE_URL}/v2/users/briffard')
     if response.status_code == 200:
         data = response.json()
         print(data)
@@ -144,9 +150,24 @@ async def who_is_on_campus(ctx):
 
 @bot.command(name='end', hidden=True)
 async def shutdown(ctx):
-    """Shutdown the bot."""
+    """Shutdown the bot.
+
+    This function sends a 'Shutting down...' message to the Discord channel
+    from which the command was invoked and then closes the bot.
+
+    Args:
+        ctx (commands.Context): The context object representing the invocation.
+
+    Returns:
+        None
+    """
+    # Sending a message to indicate that the bot is shutting down
     await ctx.send("Shutting down...")
-    #new_update_channel.stop()
+
+    # Stopping any ongoing processes, if needed (commented out in this example)
+    # new_update_channel.stop()
+
+    # Closing the bot
     await bot.close()
 
 bot.run(TOKEN)
