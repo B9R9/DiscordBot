@@ -7,6 +7,7 @@
 |[Interface 42 API](#42-api)| Find personn who have done the project on the campus and in 42 network | in progress| nope | nope |
 |[Interface 42 API](#42-api) |Allow you to create and look for evaluation slot| in progress | nope | nope|
 |[News Feed](#news-feed)| Feed a new channel |to improve | done | nope|
+|[Mistral](#mistral)| The Discord bot leverages Mistral in the background to comprehend and generate intelligent responses to user messages.|in progress | nope | nope|
 |------|-------|--------|--------|------|
 
 # Job Search  
@@ -64,3 +65,9 @@ trop de temps on encourage pour aller aider quelqu un.
 Alimente un channel avec des actulaites relatif au technologies
 
 ***
+
+# Mistral
+***
+
+Mistral 7B tourne de maniere local derriere le bot discord. Probleme de tiemout. Pas de ram pour generer des reponses rapidement. Solution creer des threads pour eviter le timeout et que le bot reste bloque. A tester egalement quand plusieurs personne utilise le bot ou avec une config plus rapide
+Il faudra egalement creer notre model avec les parametres souhaiter.

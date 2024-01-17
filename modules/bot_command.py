@@ -18,7 +18,7 @@ async def shutdown(ctx, bot):
         None
     """
 
-    ID = load_api_config('config/config.yml', 'DISCORD').get('id')
+    ID = load_api_config('config/config.yml', 'DISCORD').get('ID')
     # Sending a message to indicate that the bot is shutting down
     if ctx.author.id == ID:
         print("Commande de déconnexion reçue. Déconnexion du bot...")
